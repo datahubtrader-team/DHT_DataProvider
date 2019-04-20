@@ -1,2 +1,2 @@
-# DHT_DataTrading
+# DHT_DataProvider
 This service processes data purchase requests.
