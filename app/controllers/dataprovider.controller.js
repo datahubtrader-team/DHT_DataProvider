@@ -8,6 +8,11 @@ require('dotenv').config()
 
 const axios = require('axios');
 
+// Logger lib
+var logger = require('../../node_modules/logger').createLogger(); // logs to STDOUT
+var logger = require('../../node_modules/logger').createLogger('development.log'); // logs to a file
+
+
 //TODO: Connect to personal HAT
 
 
@@ -39,7 +44,7 @@ exports.create = (req, res) => {
             res.send(data);
             //res.end("Test");
             addMsgOntoQueue(dataprovider.toString());
-            Broadcast_data_onMarketplace(req);
+            //Broadcast_data_onMarketplace(req);
 
         }).catch(err => {
             res.status(500).send({
@@ -80,6 +85,41 @@ function Broadcast_data_onMarketplace(req) {
             console.log(error);
         });
 }
+
+//TODO: POST {data owner Id} notification endpoint called by market place service
+// data in the body should contain: data buyer Id, satisfies data qualifier
+exports.notification = (req, res) => {
+    // Validate Request
+    if (!req.body.content) {
+        return res.status(400).send({
+            message: "Empty request"
+        });
+    }
+
+    // POST notification msg to data provider
+    DataProvider.findByIdAndUpdate(req.params.dataproviderId, {
+            databuyerId: req.body.databuyerId || "Unknown databuyerId",
+            dataqualifier: req.body.dataqualifier
+        }, { new: true })
+        .then(dataprovider => {
+            if (!dataprovider) {
+                return res.status(404).send({
+                    message: "Data provider msg not found with id " + req.params.dataproviderId
+                });
+            }
+            res.send(dataprovider);
+            console.log(dataprovider);
+        }).catch(err => {
+            if (err.kind === 'ObjectId') {
+                return res.status(404).send({
+                    message: "Data provider msg not found with id " + req.params.dataproviderId
+                });
+            }
+            return res.status(500).send({
+                message: "Error updating dataprovider msg with id " + req.params.dataproviderId
+            });
+        });
+};
 
 // Retrieve and return all DataProvider msg from the database.
 exports.findAll = (req, res) => {
@@ -130,6 +170,7 @@ exports.update = (req, res) => {
             lastName: req.body.lastName,
             email: req.body.email,
             number: req.body.number,
+            status: statusUpdate.createRequest
         }, { new: true })
         .then(dataprovider => {
             if (!dataprovider) {
