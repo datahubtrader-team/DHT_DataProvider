@@ -1,3 +1,10 @@
 {
-  "files.exclude": {}
+  "files.exclude": {
+    "test": "explorerExcludedFiles",
+    "package-lock.json": "explorerExcludedFiles",
+    "jhamm.json": "explorerExcludedFiles",
+    "node_modules": "explorerExcludedFiles",
+    "contract": "explorerExcludedFiles",
+    ".vscode": "explorerExcludedFiles"
+  }
 }

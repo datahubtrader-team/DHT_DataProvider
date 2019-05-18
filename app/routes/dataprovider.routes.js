@@ -1,8 +1,18 @@
 var ObjectID = require('mongodb').ObjectID;
 const DataProvider = require('../models/dataprovider.model.js');
+const AwsUrl = require('../models/awsurl.model.js');
 
 module.exports = function(app, db) {
     const dataproviders = require('../controllers/dataprovider.controller.js');
+
+    // Login to PDS
+    app.post('/loginpds', dataproviders.loginpds);
+
+    // HAT
+    app.post('/hat', dataproviders.hat);
+
+    // Retrieve all DataProviders
+    app.get('/urls', dataproviders.findAllUrls);
 
     // Create a new DataProvider
     app.post('/dataproviders', dataproviders.create);

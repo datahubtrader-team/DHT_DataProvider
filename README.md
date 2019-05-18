@@ -3,7 +3,7 @@ This service processes data purchase requests.
 
 A full Restful CRUD API for managing dataproviders written in Node.js, Express and MongoDB.
 
-![Data providers framework architecture](Micronox-dataprovider.jpeg)
+![Data providers framework architecture](DataProvider.jpeg)
 
 ## Steps to setup the service
 

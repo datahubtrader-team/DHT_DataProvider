@@ -17,11 +17,15 @@
   },
   "homepage": "https://github.com/datahubtrader-team/DHT_OutboundCommunications#readme",
   "dependencies": {
+    "aws-sdk": "^2.455.0",
     "axios": "^0.18.0",
     "dotenv": "^7.0.0",
+    "fs": "0.0.1-security",
+    "jsonfile": "^5.0.0",
     "logger": "0.0.1",
     "mongodb": "^3.2.3",
     "opn": "^6.0.0",
+    "path": "^0.12.7",
     "request": "^2.88.0",
     "rest-facade": "^1.11.0",
     "swagger-ui-express": "^4.0.2"

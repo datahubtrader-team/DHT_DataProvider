@@ -39,17 +39,18 @@ require('./app/routes/dataprovider.routes.js')(app);
 require('./app/routes/registeruser.routes.js')(app);
 
 app.all('', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Vary', "Origin");
 });
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-opn('http://localhost:5000/api-docs')
+opn('http://localhost:4020/api-docs')
 
 // listen for requests
-app.listen(5000, () => {
-    console.log("Server is listening on port 5000");
+app.listen(4020, () => {
+    console.log("Server is listening on port 4020");
 });
