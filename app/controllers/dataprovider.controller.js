@@ -132,8 +132,8 @@ exports.hat = (req, res) => {
 //TODO: Add all secrets and keys to env variables
 //configuring the AWS environment
 AWS.config.update({
-    accessKeyId: "AKIAIODY5PFEPQONBPOA",
-    secretAccessKey: "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"
+    accessKeyId: "",
+    secretAccessKey: ""
 });
 
 var s3 = new AWS.S3();
