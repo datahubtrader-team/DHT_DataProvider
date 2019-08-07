@@ -2,17 +2,17 @@
     "swagger": "2.0",
     "info": {
         "version": "1.0.0",
-        "title": "Contact service",
-        "description": "This service handles contacts through the use of the contact API and persist the data into a MongoDB storage",
+        "title": "DataProvider service",
+        "description": "This service handles contacts through the use of the data provider API and persist the data into a MongoDB storage",
         "license": {
-            "name": "MIT",
+            "name": "Julian Hamm",
             "url": "https://opensource.org/licenses/MIT"
         }
     },
-    "host": "localhost:5000",
+    "host": "localhost:4020",
     "basePath": "/",
     "tags": [{
-        "name": "Contacts API",
+        "name": "DataProvider API",
         "description": ""
     }],
     "schemes": [
