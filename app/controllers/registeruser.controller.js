@@ -310,13 +310,17 @@ exports.trade = (req, res) => {
                 //Read data from HAT and add it to MQ
                 var data = result[0].RPlug;
 
+                //console.log("This is an example  " + result[0].name);
+
                 data.forEach(function(ele) {
 
                     //console.log(ele.plug);
                     if (ele.plug == "spotify") {
                         console.log(ele.URL);
                         console.log("Strings are equal");
-                        updateUser(ele.URL);
+
+                        //Pass in username, and password
+                        updateUser(ele.URL, result[0].name, result[0].password);
 
                     } else {
                         //console.log("NOT equal");
@@ -348,25 +352,46 @@ function conn(xx) {
     console.log(xx)
 }
 
-function writeFile(filetoupload, data) {
+function writeFile(bucketName, filetoupload, data) {
 
     jsonfile.writeFile(filetoupload, data, function(err) {
         if (err) console.error(err)
 
-        uploadtoAWS(filetoupload);
+        //uploadtoAWS(bucketName, filetoupload);
+        createBucket(bucketName, filetoupload);
     })
 }
 
+function createBucket(bucketName, filetoUpload) {
+    // Create the parameters for calling createBucket
+    var bucketParams = {
+        Bucket: bucketName,
+        ACL: 'public-read'
+    };
 
+    // call S3 to create the bucket
+    s3.createBucket(bucketParams, function(err, data) {
+        if (err) {
+            console.log("Error", err);
+        } else {
+            console.log("Success", data.Location);
+            uploadtoAWS(bucketName, filetoUpload);
+        }
 
-function uploadtoAWS(filePath) {
+        if (err.code == "BucketAlreadyExists") {
+            console.log("recall the function to create a unique bucket name");
+        }
+    });
+}
+
+function uploadtoAWS(bucketName, filePath) {
 
     //var filePath = "./jhamm.json";
     const FILE_PERMISSION = 'public-read';
 
     //configuring parameters
     var params = {
-        Bucket: 'hamm1',
+        Bucket: bucketName,
         Body: fs.createReadStream(filePath),
         Key: Date.now() + "_" + path.basename(filePath),
         ACL: FILE_PERMISSION
@@ -393,17 +418,17 @@ function uploadtoAWS(filePath) {
 
 
 //TODO: Pass in username and password to this function
-function updateUser(plug) {
-    return axios.get('https://jhamm.hubat.net/users/access_token', {
+function updateUser(plug, username, password) {
+    return axios.get('https://' + username + '.hubat.net/users/access_token', {
             headers: {
-                username: 'jhamm',
-                password: 'Dillonjerome28',
+                username: username,
+                password: password,
                 Accept: 'application/json',
             }
         })
         .then(function(response) {
             console.log(response.data.accessToken);
-            callEndpoint(plug, response.data.accessToken);
+            callEndpoint(plug, username, response.data.accessToken);
 
         })
         .catch(function(error) {
@@ -414,15 +439,15 @@ function updateUser(plug) {
 
 //Pass in plug URL
 //TODO: Pass in username to this function
-function callEndpoint(plug, accessToken) {
+function callEndpoint(plug, username, accessToken) {
     var USER_TOKEN = accessToken;
     console.log("Plugs to read from " + plug);
     //Concatenate this URL with the data plug that the Owners have in their HAT
-    axios.get('https://jhamm.hubat.net/api/v2/data/' + plug, { headers: { 'X-Auth-Token': USER_TOKEN, 'Content-Type': 'application/json' } })
+    axios.get('https://' + username + '.hubat.net/api/v2/data/' + plug, { headers: { 'X-Auth-Token': USER_TOKEN, 'Content-Type': 'application/json' } })
         .then(response => {
 
             //TODO: Change the file to HAT URL - data plug
-            writeFile('jhamm.json', response.data)
+            writeFile(username, username + '.json', response.data)
 
         })
         .catch((error) => {
