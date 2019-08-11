@@ -22,6 +22,7 @@ const hatAdapater = require("../pds.ApiClient/hat/hatAdapter");
 exports.getplugs = (req, res) => {
 
     console.log(req.body.email);
+    console.log(req.body.username);
     //====================================
     var username = req.body.username;
     // return axios.get('https://' + req.body.username + '.hubat.net/users/access_token', {
@@ -158,8 +159,10 @@ exports.update = (req, res) => {
                         var offersId = offerelement.offerId;
                         var buyData = offerelement.buy_data;
                         var offeraccepted = offerelement.offerAccepted;
-                        var OwnersId = result._id;
+                        var OwnersId = result[0]._id;
                         var valueofdata = offerelement.value;
+
+                        console.log("Owners ID as a test " + OwnersId);
 
                         SendOfferAcceptedtoBuyer(buyersId, offersId, buyData, offeraccepted, OwnersId, valueofdata);
                     }
