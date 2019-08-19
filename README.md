@@ -3,19 +3,19 @@ This service processes data purchase requests.
 
 A full Restful CRUD API for managing dataproviders written in Node.js, Express and MongoDB.
 
-![Data providers framework architecture](DataProvider.jpeg)
+![Data providers framework architecture](docs/images/DHT_DataProvider_service.png)
 
 ## Steps to setup the service
 
 **Install dependencies**
 
 ```bash
-npm install
+npm install --save
 ```
-**Run Server**
+**Run api on the development environment**
 
 ```bash
-node server.js
+npm start
 ```
 
 **Run the service using make**
@@ -25,14 +25,14 @@ make run-all
 ```
 
 ## Run the dataprovider API
-**You can browse the api at:** <http://localhost:5000>
+**You can browse the api at:** <http://localhost:4020>
 
 Here are the following API endpoints:
 
-1.	Create a new dataprovider: **POST** http://localhost:5000/dataproviders
-2.	Retrieve all dataproviders: **GET** http://localhost:5000/dataproviders
-3.	Retrieve a single dataprovider with dataproviderId: **GET** http://localhost:5000/dataproviders/{dataproviderId}
-4. Update a dataprovider with dataproviderId: **PUT** http://localhost:5000/dataproviders/{dataproviderId}
-5. Delete a dataprovider with dataproviderId: **DELETE** http://localhost:5000/dataproviders/{dataproviderId}
+![Data providers framework architecture](docs/images/endpoints.png)
 
 ## Run unit tests
+
+```bash
+npm test
+```

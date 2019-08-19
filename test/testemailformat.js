@@ -9,8 +9,8 @@ let test2 = validateEmailAddress('shahid@codeforgeek'); //false
 //console.log(test1);
 //console.log(test2);
 
-if (validateEmailAddress('shahid@codeforgeek.com')) {
-    console.log(true);
+if (validateEmailAddress('shahid@codeforgeek.co.uk')) {
+    console.log(true + " - Valid email");
 } else {
-    console.log(false);
+    console.log(false + " - Invalid email");
 }
