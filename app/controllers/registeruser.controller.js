@@ -360,8 +360,8 @@ function writeFile(bucketName, filetoupload, data) {
     jsonfile.writeFile(filetoupload, data, function(err) {
         if (err) console.error(err)
 
-        //uploadtoAWS(bucketName, filetoupload);
-        createBucket(bucketName, filetoupload);
+        uploadtoAWS(bucketName, filetoupload);
+        //createBucket(bucketName, filetoupload);
     })
 }
 
@@ -431,6 +431,7 @@ function updateUser(plug, username, password) {
         })
         .then(function(response) {
             console.log(response.data.accessToken);
+
             callEndpoint(plug, username, response.data.accessToken);
 
         })
