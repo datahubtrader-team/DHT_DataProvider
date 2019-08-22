@@ -1,5 +1,5 @@
 //const RegisterUser = require('../models/registeruser.model.js');
-//const statusUpdate = require('../enums/enum.js');
+//const statusUpdate = require('../constants/enum.js.js');
 
 var amqp = require('amqplib/callback_api');
 
@@ -98,7 +98,6 @@ function logintogetdataplugs(email, username, accesstoken) {
 
 // Retrieve all offers for an Owner's record
 exports.getoffers = (req, res) => {
-    //console.log(res.body);
 
     MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         if (err) throw err;
@@ -110,15 +109,33 @@ exports.getoffers = (req, res) => {
 
             //display offers that are in false and null state
 
-            //TODO: Check if the offer deadline date has expired or not
-            //TODO: If it has, then notify the data owner and do not display it
             var offers = result.offer;
             if (offers) {
-                res.send(offers);
+                console.log(offers);
+
+                var newDate = new Date();
+                newDate.setDate(newDate.getDate());
+                var today = newDate.toISOString().slice(0, 10);
+
+                console.log("Today's date: " + today);
+
+                offers.forEach(function(eachOffer) {
+
+                    //Check if the offer deadline date has expired or not
+                    if (eachOffer.deadline != today) {
+
+                        res.send([eachOffer]);
+
+                        //TODO: If it has, then notify the data owner and do not display it
+                    }
+
+                });
+
             } else {
+
+                //TODO: Pass in the constants for this message
                 res.send({ message: "This owner has no offers" });
             }
-
             db.close();
         });
     });
@@ -316,6 +333,7 @@ exports.trade = (req, res) => {
                 //console.log("This is an example  " + result[0].name);
 
                 data.forEach(function(ele) {
+
 
                     //console.log(ele.plug);
                     if (ele.plug == "spotify") {

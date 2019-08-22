@@ -1,7 +1,7 @@
 const DataProvider = require('../models/dataprovider.model.js');
 const PDSLogin = require('../models/login.model.js');
 const AWSURL = require('../models/awsurl.model.js');
-const statusUpdate = require('../Enums/enum.js');
+const statusUpdate = require('../constants/enum.js.js');
 
 var amqp = require('amqplib/callback_api');
 

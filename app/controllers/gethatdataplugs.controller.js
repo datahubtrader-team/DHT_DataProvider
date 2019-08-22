@@ -10,6 +10,8 @@ var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 const ObjectID = require('mongodb').ObjectID;
 
+//const statusUpdate = require('../constants/enum.js.js');
+
 /** Get data plugs */
 exports.getdataplugs = (req, res) => {
 
