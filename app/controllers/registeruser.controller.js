@@ -126,7 +126,10 @@ exports.getoffers = (req, res) => {
 
                         res.send([eachOffer]);
 
-                        //TODO: If it has, then notify the data owner and do not display it
+                    } else if (eachOffer.deadline == today) {
+
+                        // If it has, then notify the data owner and do not display it
+                        PublishNotificationToMQ(result.email, eachOffer.buy_data, eachOffer.offerId, "message");
                     }
 
                 });
@@ -140,6 +143,37 @@ exports.getoffers = (req, res) => {
         });
     });
 };
+
+//Publish Notification To MQ
+function PublishNotificationToMQ(email, datatopurchaseonOffer, offerId, message) {
+    amqp.connect('amqp://localhost', function(error0, connection) {
+        if (error0) {
+            throw error0;
+        }
+        connection.createChannel(function(error1, channel) {
+            if (error1) {
+                throw error1;
+            }
+
+            //Name of the trade MQ
+            var queue = 'notification';
+            var msg = { email: email, datapurchase: datatopurchaseonOffer, offerId: offerId, message: message };
+
+            channel.assertQueue(queue, {
+                durable: false
+            });
+
+
+            channel.sendToQueue(queue, new Buffer.from(JSON.stringify(msg)));
+
+            console.log(" [x] Sent %s", new Buffer.from(JSON.stringify(msg)));
+        });
+        setTimeout(function() {
+            connection.close();
+        }, 500);
+    });
+}
+
 
 // Update offer to true -- Offers have been accepted
 exports.update = (req, res) => {
@@ -335,7 +369,7 @@ exports.trade = (req, res) => {
                 data.forEach(function(ele) {
 
 
-                    //console.log(ele.plug);
+                    console.log(ele.plug);
                     if (ele.plug == "spotify") {
                         console.log(ele.URL);
                         console.log("Strings are equal");
@@ -418,6 +452,7 @@ function uploadtoAWS(bucketName, filePath) {
         ACL: FILE_PERMISSION
     };
 
+    //s3.upload(params, function(err, data) {
     s3.upload(params, function(err, data) {
         //handle error
         if (err) {
@@ -426,10 +461,20 @@ function uploadtoAWS(bucketName, filePath) {
 
         //success
         if (data) {
-            console.log("Uploaded in:", data.Location);
+            //console.log("Uploaded in:", data.Location);
+
+            console.log("************ ", data);
+
+            var params = { Bucket: data.Bucket, Key: data.key, Expires: 100 };
+            s3.getSignedUrl('getObject', params, function(err, url) {
+
+                //TODO: Add buyer's Id to 
+                WriteAWSURLtoMQ("123", url);
+                console.log('Signed URL: ' + url);
+            });
 
             //Add the AWS URL to MQ
-            WriteAWSURLtoMQ(data.Location);
+            //WriteAWSURLtoMQ(data.Location);
 
             //TODO: Save this AWS URL link to the Owner's record in the OwnersDB
         }
@@ -479,7 +524,7 @@ function callEndpoint(plug, username, accessToken) {
 }
 
 //Send AWS URL to trade MQ
-function WriteAWSURLtoMQ(AWSURL) {
+function WriteAWSURLtoMQ(buyerId, AWSURL) {
     amqp.connect('amqp://localhost', function(error0, connection) {
         if (error0) {
             throw error0;
@@ -489,9 +534,9 @@ function WriteAWSURLtoMQ(AWSURL) {
                 throw error1;
             }
 
-            //Name the trade MQ
+            //Name of the trade MQ
             var queue = 'tradeAccepted';
-            var msg = AWSURL;
+            var msg = { buyerId: { AWSURL } };
 
             channel.assertQueue(queue, {
                 durable: false
