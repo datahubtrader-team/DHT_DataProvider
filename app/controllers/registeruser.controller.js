@@ -119,20 +119,26 @@ exports.getoffers = (req, res) => {
 
                 console.log("Today's date: " + today);
 
-                offers.forEach(function(eachOffer) {
 
-                    //Check if the offer deadline date has expired or not
-                    if (eachOffer.deadline != today) {
+                var UpdatedOffers = [];
 
-                        res.send([eachOffer]);
+                for (i in offers) {
 
-                    } else if (eachOffer.deadline == today) {
+                    if (offers[i].deadline >= today) {
+
+                        UpdatedOffers.push(offers[i]);
+
+                    } else if (offers[i].deadline < today) {
 
                         // If it has, then notify the data owner and do not display it
-                        PublishNotificationToMQ(result.email, eachOffer.buy_data, eachOffer.offerId, "message");
+                        PublishNotificationToMQ(result.email, offers[i].buy_data, offers[i].offerId, "message");
                     }
 
-                });
+                }
+
+                let listofOffers = UpdatedOffers;
+                console.log(listofOffers);
+                res.send(listofOffers);
 
             } else {
 

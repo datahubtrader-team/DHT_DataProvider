@@ -35,5 +35,10 @@
         "request": "^2.88.0",
         "rest-facade": "^1.11.0",
         "swagger-ui-express": "^4.0.2"
+    },
+    "devDependencies": {
+        "mocha": "^6.2.0",
+        "should": "^13.2.3",
+        "supertest": "^4.0.2"
     }
 }
