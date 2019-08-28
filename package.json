@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node server.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "mocha --recursive --exit --timeout 10000"
     },
     "repository": {
         "type": "git",
@@ -28,6 +28,7 @@
         "jsonfile": "^5.0.0",
         "jwt-decode": "^2.2.0",
         "logger": "0.0.1",
+        "mockgoose": "^8.0.2",
         "moment": "^2.24.0",
         "mongodb": "^3.2.7",
         "opn": "^6.0.0",
@@ -37,8 +38,14 @@
         "swagger-ui-express": "^4.0.2"
     },
     "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "chai": "^4.2.0",
+        "chai-http": "^4.3.0",
         "mocha": "^6.2.0",
+        "nodemon": "^1.19.1",
         "should": "^13.2.3",
+        "sinon": "^7.4.1",
         "supertest": "^4.0.2"
     }
 }

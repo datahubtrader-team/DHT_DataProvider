@@ -112,3 +112,5 @@ module.exports = (app) => {
      */
     app.get('/hatdataplugs', gethatdata.getdataplugs);
 }
+
+//module.exports = app;

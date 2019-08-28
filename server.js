@@ -16,20 +16,29 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // Configuring the database
-const dbConfig = require('./config/database.config.js');
-const mongoose = require('mongoose');
+//const dbConfig = require('./config/database.config.js');
+//const mongoose = require('mongoose');
+const db = require('./db/index.js');
 
-mongoose.Promise = global.Promise;
+//mongoose.Promise = global.Promise;
 
 // Connecting to the database
-mongoose.connect(dbConfig.url, {
-    useNewUrlParser: true
-}).then(() => {
-    console.log("Successfully connected to the database");
-}).catch(err => {
-    console.log('Could not connect to the database. Exiting now...', err);
-    process.exit();
-});
+// mongoose.connect(dbConfig.url, {
+//     useNewUrlParser: true
+// }).then(() => {
+//     console.log("Successfully connected to the database");
+// }).catch(err => {
+//     console.log('Could not connect to the database. Exiting now...', err);
+//     process.exit();
+// });
+
+db.connect()
+    .then(() => {
+        console.log("Successfully connected to the database");
+    }).catch(err => {
+        console.log('Could not connect to the database. Exiting now...', err);
+        process.exit();
+    });
 
 // define a simple route
 app.get('/', (req, res) => {
@@ -83,3 +92,5 @@ opn('http://localhost:' + port + '/api-docs')
 app.listen(port, () => {
     console.log("Server is listening on port " + port);
 });
+
+module.exports = app;

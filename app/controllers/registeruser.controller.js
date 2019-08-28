@@ -96,7 +96,7 @@ function logintogetdataplugs(email, username, accesstoken) {
         });
 }
 
-// Retrieve all offers for an Owner's record
+// Retrieve all offers for a Owner's record
 exports.getoffers = (req, res) => {
 
     MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
@@ -351,7 +351,7 @@ exports.trade = (req, res) => {
             "offer.buy_data": req.body.plug,
             "email": req.body.email
         };
-        console.log(req.body.plug);
+        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" + req.body.plug);
         dbo.collection("users").findOneAndUpdate(plugs, { $set: { "offer.$.trade": "tradeAccepted" } }, function(err, result) {
             if (err) throw err;
             //console.log(result);
@@ -376,7 +376,8 @@ exports.trade = (req, res) => {
 
 
                     console.log(ele.plug);
-                    if (ele.plug == "spotify") {
+                    if (ele.plug == req.body.plug) {
+                        //if (ele.plug == "twitter") {
                         console.log(ele.URL);
                         console.log("Strings are equal");
 
@@ -425,6 +426,7 @@ function writeFile(bucketName, filetoupload, data) {
 
 function createBucket(bucketName, filetoUpload) {
     // Create the parameters for calling createBucket
+    bucketName = "jhamm";
     var bucketParams = {
         Bucket: bucketName,
         ACL: 'public-read'
@@ -449,6 +451,8 @@ function uploadtoAWS(bucketName, filePath) {
 
     //var filePath = "./jhamm.json";
     const FILE_PERMISSION = 'public-read';
+
+    bucketName = "jhamm";
 
     //configuring parameters
     var params = {
@@ -542,14 +546,14 @@ function WriteAWSURLtoMQ(buyerId, AWSURL) {
 
             //Name of the trade MQ
             var queue = 'tradeAccepted';
-            var msg = { buyerId: { AWSURL } };
+            var msg = { buyerId: buyerId, AWSLink: AWSURL };
 
             channel.assertQueue(queue, {
                 durable: false
             });
-            channel.sendToQueue(queue, Buffer.from(msg));
+            channel.sendToQueue(queue, new Buffer.from(JSON.stringify(msg)));
 
-            console.log(" [x] Sent %s", msg);
+            console.log(" [x] Sent %s", new Buffer.from(JSON.stringify(msg)));
         });
         setTimeout(function() {
             connection.close();
