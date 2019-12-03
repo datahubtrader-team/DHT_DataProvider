@@ -5,3 +5,4 @@ node_modules
 contract
 .vscode
 .env
+node_modules/
