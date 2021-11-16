@@ -19,7 +19,7 @@
     "homepage": "https://github.com/datahubtrader-team/DHT_DataProvider#readme",
     "dependencies": {
         "amqplib": "^0.5.3",
-        "aws-sdk": "^2.455.0",
+        "aws-sdk": "^2.814.0",
         "axios": "^0.18.1",
         "crypto-random-string": "^3.0.1",
         "dotenv": "^7.0.0",
